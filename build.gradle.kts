@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.drownek"
-version = "1.0"
+version = "2.0"
 
 repositories {
     mavenCentral()
@@ -43,15 +43,6 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok:1.18.36")
     annotationProcessor("org.projectlombok:lombok:1.18.36")
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            println("Publishing as ${listOf(groupId, artifactId, version).joinToString(":") { it ?: "NONE"}}")
-            from(components["java"])
-        }
-    }
 }
 
 java {
