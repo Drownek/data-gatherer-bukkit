@@ -6,30 +6,7 @@ plugins {
 group = "me.drownek"
 version = "2.0"
 
-repositories {
-    mavenCentral()
-    mavenLocal()
-    maven { url = uri("https://jitpack.io") }
-    maven {
-        name = "enginehub-maven"
-        url = uri("https://maven.enginehub.org/repo/")
-    }
-    maven {
-        name = "storehouse-releases"
-        url = uri("https://storehouse.okaeri.eu/repository/maven-releases/")
-    }
-    maven {
-        name = "panda-repo"
-        url = uri("https://repo.panda-lang.org/releases")
-    }
-    maven {
-        name = "spigot-repo"
-        url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
-    }
-}
-
 dependencies {
-    implementation("com.github.Drownek:bukkit-utils:1.0")
     implementation("org.jetbrains:annotations:20.1.0")
 
     // adventure

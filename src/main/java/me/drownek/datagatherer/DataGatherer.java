@@ -1,10 +1,10 @@
 package me.drownek.datagatherer;
 
-import me.drownek.util.CommandUtil;
-import me.drownek.util.EventRegistration;
-import me.drownek.util.TextUtil;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.drownek.datagatherer.localization.LocalizationManager;
+import me.drownek.datagatherer.localization.MessageKey;
+import me.drownek.datagatherer.step.Step;
+import me.drownek.datagatherer.util.EventRegistration;
+import me.drownek.datagatherer.util.adventure.TextUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.*;
@@ -15,25 +15,16 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.Nullable;
-import me.drownek.datagatherer.step.Step;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class DataGatherer {
-
-    public static final Component CONFIRM_MESSAGE = MiniMessage.miniMessage().deserialize(
-        "Kliknij F aby potwierdzić " +
-            "[" +
-            "<click:run_command:/datagatherer-no><hover:show_text:Kliknij, aby ponownie ustawić>Powtórz krok</hover></click>" +
-            "]"
-    );
-    public static final String TIMEOUT_MESSAGE = "Czas na akcje wygasł!";
-    public static final String CANCEL_MESSAGE = "<click:run_command:/datagatherer-exit><hover:show_text:Kliknij, by anulować><dark_green>[Anuluj]</hover></click>";
 
     private final Plugin plugin;
 
@@ -83,7 +74,7 @@ public class DataGatherer {
 
     public void start(Player player) {
         if (DataGathererManager.playersInDataGatherer.containsKey(player)) {
-            TextUtil.message(player, "&cJesteś już w trakcie tworzenia!");
+            TextUtil.message(player, LocalizationManager.getMessage(MessageKey.ALREADY_IN_GATHERER));
             return;
         }
 
@@ -112,7 +103,7 @@ public class DataGatherer {
                     event.setCancelled(true);
 
                     unregister();
-                    TextUtil.message(player, "&cAnulowano!");
+                    TextUtil.message(player, LocalizationManager.getMessage(MessageKey.CANCELLED));
                     if (cancelAction != null) {
                         cancelAction.run();
                     }
@@ -141,7 +132,7 @@ public class DataGatherer {
         @SuppressWarnings("unchecked")
         Step<T, E> step = (Step<T, E>) steps.get(currentStep);
 
-        TextUtil.adventure.player(player).sendMessage(MiniMessage.miniMessage().deserialize("<green>" + step.getInfo() + " " + CANCEL_MESSAGE));
+        TextUtil.message(player, LocalizationManager.getMessage(MessageKey.CURRENT_STEP_INFO, Map.of("{STEP_INFO}", step.getInfo())));
 
         Listener listener = new Listener() {
         };
@@ -167,12 +158,13 @@ public class DataGatherer {
             T value = result.value();
             if (displaySetValues && step.isDisplaySetValue()) {
                 if (value != null) {
-                    TextUtil.message(player, "Ustawiono na: " + step.getToStringMapper().apply(value));
+                    String mappedValue = step.getToStringMapper().apply(value);
+                    TextUtil.message(player, LocalizationManager.getMessage(MessageKey.VALUE_SET, Map.of("{VALUE}", mappedValue)));
                 }
             }
 
             if (confirmActions && step.isConfirmAction()) {
-                TextUtil.adventure.player(player).sendMessage(CONFIRM_MESSAGE);
+                TextUtil.message(player, LocalizationManager.getMessage(MessageKey.CONFIRM_MESSAGE));
                 registerListener(new Listener() {
                     @EventHandler
                     public void onCommand(PlayerCommandPreprocessEvent event) {
@@ -240,13 +232,13 @@ public class DataGatherer {
         }
         unregister();
         if (timeout) {
-            TextUtil.message(player, TIMEOUT_MESSAGE);
+            TextUtil.message(player, LocalizationManager.getMessage(MessageKey.TIMEOUT_MESSAGE));
         } else {
             if (endAction != null) {
                 Bukkit.getScheduler().runTask(plugin, endAction);
             }
             if (displaySuccessMessage && success) {
-                TextUtil.message(player, CommandUtil.SUCCESS_MESSAGE);
+                TextUtil.message(player, LocalizationManager.getMessage(MessageKey.SUCCESS));
             }
         }
         DataGathererManager.playersInDataGatherer.remove(player);

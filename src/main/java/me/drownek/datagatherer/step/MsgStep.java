@@ -13,10 +13,14 @@ public class MsgStep extends Step<String, AsyncPlayerChatEvent> {
     }
 
     public MsgStep(String info, Consumer<String> consumer, Predicate<String> predicate) {
+        this(info, consumer, predicate, "Zły format!");
+    }
+
+    public MsgStep(String info, Consumer<String> consumer, Predicate<String> predicate, String wrongMessageError) {
         super(AsyncPlayerChatEvent.class, event -> {
             String message = event.getMessage();
             if (!predicate.test(message)) {
-                return StepResult.fail("Zły format!");
+                return StepResult.fail(wrongMessageError);
             }
             return StepResult.success(message, () -> consumer.accept(message));
         }, info);
