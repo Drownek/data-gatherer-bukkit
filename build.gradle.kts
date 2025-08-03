@@ -27,3 +27,12 @@ java {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            println("Publishing as ${listOf(groupId, artifactId, version).joinToString(":") { it ?: "NONE"}}")
+            from(components["java"])
+        }
+    }
+}
