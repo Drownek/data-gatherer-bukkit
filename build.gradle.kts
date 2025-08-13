@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.drownek"
-version = "2.0.1"
+version = "2.0.2"
 
 dependencies {
     implementation("org.jetbrains:annotations:20.1.0")
