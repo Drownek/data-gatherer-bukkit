@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.Drownek:data-gatherer-bukkit:2.0.1")
+    implementation("com.github.Drownek:data-gatherer-bukkit:2.0.2")
 }
 ```
 ### Gradle (Groovy)
@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Drownek:data-gatherer-bukkit:2.0.1'
+    implementation 'com.github.Drownek:data-gatherer-bukkit:2.0.2'
 }
 ```
 ### Maven
@@ -38,7 +38,7 @@ dependencies {
     <dependency>
         <groupId>com.github.Drownek</groupId>
         <artifactId>data-gatherer-bukkit</artifactId>
-        <version>2.0.1</version>
+        <version>2.0.2</version>
     </dependency>
 </dependencies>
 ```
